@@ -30,7 +30,7 @@ import CreateCategory from '../pages/categories/CreateCategory';
 import EditCategory from '../pages/categories/EditCategory';
 import StockMovements from '../pages/stock/StockMovements';
 
-import JobTasks from '../pages/jobTasks/JobTasks';
+import JobTasks from '../pages/jobtasks/JobTasks';
 import Locations from '../pages/locations/Locations';
 import MissionRepairs from '../pages/missionRepairs/MissionRepairs';
 import TechnicalMissions from '../pages/technicalMissions/TechnicalMissions';
