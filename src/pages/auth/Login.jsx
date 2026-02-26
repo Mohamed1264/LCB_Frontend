@@ -44,24 +44,24 @@ const Login = () => {
     if (phoneError || passwordError) return;
 
     loginMutate(credentials, {
-      onSuccess: () => {
-        toast.success(`✅ ${t("login_success")}`);
-        navigate("/welcome", { replace: true });
-      },
-      onError: (error) => {
-        // Prefer server-provided message when available
-        const serverMessage = error?.response?.data?.message || error?.message;
-        toast.error(`❌ ${serverMessage || t("login_error")}`);
-        // also set field-level errors if backend returned validation errors
-        const errors = error?.response?.data?.errors;
-        if (errors) {
-          const fieldErrors = {};
-          if (errors.phone) fieldErrors.phone = errors.phone[0];
-          if (errors.password) fieldErrors.password = errors.password[0];
-          setErrors(prev => ({ ...prev, ...fieldErrors }));
-        }
-      }
-    });
+  onSuccess: () => {
+    toast.success(`✅ ${t("login_success")}`);
+    navigate("/welcome", { replace: true });
+  },
+  onError: (error) => {
+    console.log("Full login error object:", error); // <-- ADD THIS
+    const serverMessage = error?.response?.data?.message || error?.message;
+    toast.error(`❌ ${serverMessage || t("login_error")}`);
+
+    const errors = error?.response?.data?.errors;
+    if (errors) {
+      const fieldErrors = {};
+      if (errors.phone) fieldErrors.phone = errors.phone[0];
+      if (errors.password) fieldErrors.password = errors.password[0];
+      setErrors(prev => ({ ...prev, ...fieldErrors }));
+    }
+  }
+});
   };
 
   const currentLang = i18n.language?.startsWith("fr") ? "fr" : "ar";
