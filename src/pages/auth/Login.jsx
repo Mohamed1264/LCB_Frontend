@@ -43,25 +43,36 @@ const Login = () => {
     setTouched({ phone: true, password: true });
     if (phoneError || passwordError) return;
 
+    // 🔥 Login mutation with full console logging
     loginMutate(credentials, {
-  onSuccess: () => {
-    toast.success(`✅ ${t("login_success")}`);
-    navigate("/welcome", { replace: true });
-  },
-  onError: (error) => {
-    console.log("Full login error object:", error); // <-- ADD THIS
-    const serverMessage = error?.response?.data?.message || error?.message;
-    toast.error(`❌ ${serverMessage || t("login_error")}`);
+      onSuccess: (data) => {
+        console.log("Login success response:", data); // <-- log full response
+        toast.success(`✅ ${t("login_success")}`);
+        navigate("/welcome", { replace: true });
+      },
+      onError: (error) => {
+        console.log("Full login error object:", error); // <-- log full error object
+        // Axios-like error object
+        if (error?.response) {
+          console.log("Error response status:", error.response.status);
+          console.log("Error response headers:", error.response.headers);
+          console.log("Error response data:", error.response.data);
+        } else {
+          console.log("Network / CORS / other error:", error.message);
+        }
 
-    const errors = error?.response?.data?.errors;
-    if (errors) {
-      const fieldErrors = {};
-      if (errors.phone) fieldErrors.phone = errors.phone[0];
-      if (errors.password) fieldErrors.password = errors.password[0];
-      setErrors(prev => ({ ...prev, ...fieldErrors }));
-    }
-  }
-});
+        const serverMessage = error?.response?.data?.message || error?.message;
+        toast.error(`❌ ${serverMessage || t("login_error")}`);
+
+        const fieldErrors = error?.response?.data?.errors;
+        if (fieldErrors) {
+          const newErrors = {};
+          if (fieldErrors.phone) newErrors.phone = fieldErrors.phone[0];
+          if (fieldErrors.password) newErrors.password = fieldErrors.password[0];
+          setErrors(prev => ({ ...prev, ...newErrors }));
+        }
+      }
+    });
   };
 
   const currentLang = i18n.language?.startsWith("fr") ? "fr" : "ar";
@@ -97,7 +108,6 @@ const Login = () => {
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
           <div className="p-8 sm:p-10">
             <form onSubmit={handleSubmit} className="space-y-6">
-              
               {/* Phone */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">{t("login_phone_label")}</label>
@@ -138,7 +148,6 @@ const Login = () => {
                         : "border-gray-300 focus:ring-blue-200 focus:border-blue-500"
                     } shadow-sm`}
                   />
-                 
                 </div>
                 {errors.password && touched.password && (
                   <p className="mt-1 text-xs text-red-600">{errors.password}</p>
@@ -157,9 +166,6 @@ const Login = () => {
               >
                 {isPending ? t("login_loading") : t("login_submit")}
               </button>
-              {/* information Erreur */
-              
-              }
             </form>
           </div>
         </div>
