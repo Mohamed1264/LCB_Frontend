@@ -51,6 +51,7 @@ const Login = () => {
         navigate("/welcome", { replace: true });
       },
       onError: (error) => {
+        console.log("1");
         console.log("Full login error object:", error); // <-- log full error object
         // Axios-like error object
         if (error?.response) {
@@ -85,7 +86,7 @@ const Login = () => {
       <div className="w-full max-w-md">
         {/* Brand + language switch */}
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">{t("login_brand")}</h1>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">LCB system</h1>
           <div className="inline-flex rounded-full border border-gray-200 bg-white shadow-sm text-xs font-medium overflow-hidden">
             <button
               type="button"
